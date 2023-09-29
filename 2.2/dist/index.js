@@ -73,7 +73,7 @@ function getNames2(params) {
 getNames2(urls);
 // Without Promise.all and without async/await: polifil for Promise.All
 function getArrayOfAllPromises(params) {
-    let prms = [];
+    let prms = []; // for array of promises
     params.forEach((ip) => {
         let one = fetch(ip).then(str => { return str.json(); }).then(nm => { return nm.name; }).catch(e => { console.log(e); });
         prms.push(one);
@@ -89,7 +89,7 @@ function getPromises(promises) {
                 if (arrayOfStrings.length === promises.length) {
                     resolve(arrayOfStrings);
                 }
-            });
+            }).catch(error => reject(console.log(error)));
         });
     });
     promise.then(names => console.log("Task 3-c: " + names));

@@ -93,7 +93,7 @@ getNames2(urls);
 
 function getArrayOfAllPromises(params: string[]) {
 
-    let prms: any = [];
+    let prms: Promise<string>[] = []; // for array of promises
 
         params.forEach((ip) => {
             let one = fetch(ip).then(str => { return str.json() }).then(nm => { return nm.name }).catch(e => { console.log(e) });
@@ -103,14 +103,13 @@ function getArrayOfAllPromises(params: string[]) {
     return prms;
 }
 
-function getPromises(promises:any) {
+function getPromises(promises:Promise<string>[]) {
     
     const arrayOfStrings:string[] = [];
 
-    
     let promise = new Promise((resolve, reject) => {
 
-        promises.forEach((prm:any) => {
+        promises.forEach((prm:Promise<string>) => {
             prm.then((str:string) => {
 
                 arrayOfStrings.push(str);
@@ -118,7 +117,7 @@ function getPromises(promises:any) {
                 if (arrayOfStrings.length === promises.length) {
                     resolve(arrayOfStrings);
                 }
-            })
+            }).catch(error => reject(console.log(error)));
         })
     })
 
