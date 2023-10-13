@@ -1,4 +1,4 @@
-/* HTTP request. */
+/* HTTP client. */
 
 async function sendRequest() {
 
@@ -22,7 +22,7 @@ async function sendRequest() {
     body: JSON.stringify(textPost)
   });
 
-  // Obtains an answer from server we connect.
+  // Obtains an answer from server we connect in JSON format.
   let result = await response.json();
   
   // Fixes end time after receiving response from server.
@@ -43,5 +43,56 @@ async function sendRequest() {
 }
 
 sendRequest();
+
+
+/* TCP Client */
+
+import net from 'net'
+
+const port = 3001;
+const host = 'localhost';
+  
+// Text from Client to Server
+let textPostTcp = "Hello, servere!";
+
+// Makes soket for client (must have to protocol TCP)
+const client = new net.Socket();
+
+// Fixes start time of process passing data to server.
+const startTime = performance.now();
+
+// Connection to tcp-server
+client.connect(port, host, ()=> {
+
+  // Passing info to server
+  client.write(textPostTcp);
+
+});
+
+// Now listen response from server
+client.on('data', (data) => {
+  
+  let response = data.toString();
+
+  // Fixes end time after receiving response from server.
+  const endTime = performance.now();
+  
+  console.log("---TCP protocol---")
+
+  if (response === textPostTcp) {
+    
+    console.log ("YES! We got the same answer from TCP server!")
+  } else {
+
+    console.log("NO!!! An answer from TCP server is different from our request.")
+
+  }
+
+  // Passed time for obtaining a response from server.
+  console.log("Elapsed time is " + (endTime - startTime).toFixed(2) + " milliseconds");
+
+  // Close the connection after receiving the response
+  client.end();
+})
 
 // npm run build && npm run myRunClients
