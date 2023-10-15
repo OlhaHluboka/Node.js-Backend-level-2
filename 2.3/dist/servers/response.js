@@ -1,6 +1,7 @@
 import express from 'express';
 import http from 'http';
 import net from 'net';
+import dgram from 'dgram';
 const app = express();
 /* HTTP server */
 const portHTTP = 3000;
@@ -61,4 +62,43 @@ function stopTCPServer() {
     });
 }
 process.on('SIGINT', stopTCPServer);
+/* UDP server */
+const portUDP = 3002;
+const serverUDP = dgram.createSocket('udp4');
+// emits when any error occurs
+serverUDP.on('error', function (error) {
+    console.log('Error: ' + error);
+    serverUDP.close();
+});
+// emits when socket is ready and listening for datagram msgs
+serverUDP.on('listening', () => {
+    const address = serverUDP.address();
+    console.log(`UDP server listening on ${address.address}:${address.port}`);
+});
+serverUDP.bind(portUDP);
+// emits on new datagram msg
+serverUDP.on('message', function (msg, info) {
+    console.log("**** UDP SERVER ****");
+    console.log(`Client's IP: ${info.address}:${info.port}`);
+    console.log("Time of event is " + new Date().toString());
+    console.log('Data received from client : ' + msg.toString());
+    //sending msg
+    serverUDP.send(msg, info.port, 'localhost', function (error) {
+        if (error) {
+            serverUDP.close();
+        }
+        else {
+            console.log('Data sent !!!');
+        }
+    });
+});
+// Function to gracefully shutdown the server
+function shutdownServer() {
+    serverUDP.close(() => {
+        console.log('Server is shutting down.');
+        process.exit(0);
+    });
+}
+// Listen for SIGINT signal (Ctrl+C) to initiate server shutdown
+process.on('SIGINT', shutdownServer);
 // npm run build && npm run myRunServers
