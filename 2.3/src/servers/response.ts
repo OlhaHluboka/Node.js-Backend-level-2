@@ -9,7 +9,7 @@ const app = express();
 
 const portHTTP = 3000;
 
-// A built-in intermediary that parses incoming requests into a JSON object.
+// A built-in intermediary (middleware) that parses incoming requests into a JSON object.
 app.use(express.json());
 
 // Creates and listens server for HTTP requests (on the task conditions).
