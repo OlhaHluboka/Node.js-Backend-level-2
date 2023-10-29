@@ -6,15 +6,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf ./dist && tsc",
-    "runServer": "rimraf ./dist/servers && tsc && node dist/server.js"
+    "runServer": "rimraf ./dist/servers && tsc && node dist/server_iter1.js"
   },
   "keywords": [],
   "author": "Olha Hluboka",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.15",
     "@types/express": "^4.17.20"
   }
 }
