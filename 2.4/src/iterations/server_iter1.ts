@@ -50,7 +50,7 @@ app.post('/api/v1/items', jsonParser, (req, res) => {
 
 // The third route of todo app. Changes a text in the task received from front. Retrieves to front an 
 // object {ok: true} 
-app.put('/api/v1/items2', jsonParser, (req, res) => {
+app.put('/api/v1/items', jsonParser, (req, res) => {
   
   // Fields for new information from the front.
   let newText:string = req.body.text;
@@ -65,17 +65,22 @@ app.put('/api/v1/items2', jsonParser, (req, res) => {
 
   res.send (JSON.stringify({ok: true}));
 
+  
+  for (const value of todoList.items) {
+    console.log(value);
+  }
+
 })
 
-app.delete('/api/v1/items2', (req, res) => {
+app.delete('/api/v1/items', (req, res) => {
 
   // Find the task in our memory structure - array.
-  let index:number = todoList.items.findIndex((item) => item.id === req.body.id);
+  let index:number = todoList.items.findIndex(item => item.id === req.body.id);
 
-  // Deletes from array this task.
+   // Deletes from array this task.
   todoList.items.splice(index, 1);
 
-  res.send (JSON.stringify({ok: true}));
+  res.send (JSON.stringify({ok: true})); 
 })
 
 // Function to gracefully shutdown the server
@@ -88,5 +93,7 @@ function shutdownServer() {
   
   // Listen for SIGINT signal (Ctrl+C) to initiate server shutdown
   process.on('SIGINT', shutdownServer);
+
+  
 
   //  npm run start
