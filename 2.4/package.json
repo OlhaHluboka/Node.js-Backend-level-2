@@ -2,12 +2,13 @@
   "name": "2.4",
   "version": "1.0.0",
   "description": "",
-  "main": "localStorage.js",
+  "main": "fileStorage.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf ./dist && tsc",
-    "start": "npm run build && node dist/localStorage.js",
-    "dev": "npm run build && nodemon .\\dist\\localStorage.js"
+    "start": "npm run build && node dist/fileStorage.js",
+    "dev": "npm run build && nodemon .\\dist\\fileStorage.js",
+    "exec": "npx nodemon"
   },
   "keywords": [],
   "author": "Olha Hluboka",

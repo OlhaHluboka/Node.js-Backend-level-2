@@ -28,7 +28,7 @@ let todoId: number = 0;
 
 // Creates and listens server in the port specified from index.html
 app.listen(port, () => {
-  console.log(`First iteration! This server started and is listening the port ${port}`);
+  console.log(`First iteration - using local storage! This server started and is listening the port ${port}`);
 });
 
 // The first route for entity "Todo list". Retrieves to front all todo list and it shows it in browsers.  
