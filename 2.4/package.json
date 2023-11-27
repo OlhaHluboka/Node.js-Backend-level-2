@@ -2,12 +2,12 @@
   "name": "2.4",
   "version": "1.0.0",
   "description": "",
-  "main": "fileStorage.js",
+  "main": "mongoStorage.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf ./dist && tsc",
-    "start": "npm run build && node dist/fileStorage.js",
-    "dev": "npm run build && nodemon .\\dist\\fileStorage.js",
+    "start": "npm run build && node dist/mongoStorage.js",
+    "dev": "npm run build && nodemon .\\dist\\mongoStorage.js",
     "exec": "npx nodemon"
   },
   "keywords": [],

@@ -3,6 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * There is a backend for todo-application with data retention in files "todoList.json" and
+ * counter.txt
+ */
 const express_1 = __importDefault(require("express"));
 const path_1 = __importDefault(require("path"));
 const body_parser_1 = __importDefault(require("body-parser"));
@@ -21,9 +25,11 @@ app.use((0, cors_1.default)({
 }));
 // Creates and listens server in the port specified from index.html
 app.listen(port, () => {
-    console.log(`!Second iteration - using file storage! This server started and is listening the port ${port}`);
+    console.log(`Second iteration - using file storage! This server started and is listening the port ${port}`);
 });
+// Variables for retention data in files
 let todoCount;
+// Model of data
 let todoItems = { items: [] };
 app.get('/api/v1/items', (req, res) => {
     todoItems = JSON.parse(fs_1.default.readFileSync(filePath, 'utf-8'));
@@ -45,17 +51,6 @@ app.post('/api/v1/items', (req, res) => {
     res.send(JSON.stringify({ id: todoCount }));
 });
 app.put('/api/v1/items', (req, res) => {
-    /*  if (req.body.checked === true) {
-         todoItems = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-         let index:number = req.body.id - 1;
-         todoItems.items[index].checked = true;
-         fs.writeFileSync(filePath, JSON.stringify(todoItems), 'utf-8' );
-     } else {
-         todoItems = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-         let index:number = req.body.id - 1;
-         todoItems.items[index].checked = false;
-         fs.writeFileSync(filePath, JSON.stringify(todoItems), 'utf-8' );
-     } */
     // Fields for new information from the front.
     todoItems = JSON.parse(fs_1.default.readFileSync(filePath, 'utf-8'));
     let newText = req.body.text;
