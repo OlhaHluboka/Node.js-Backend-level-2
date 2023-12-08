@@ -15,7 +15,8 @@ let todoCount: number;
 
 app.use(express.json());
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, '../static')));
+app.use(express.static(path.resolve(__dirname, '../front')));
+
 app.use(cors({
 
     origin: 'http://localhost:3005',
@@ -30,7 +31,7 @@ async function run() {
         // Connecting to the Mongo server
         await client.connect();
 
-        console.log('DB connection established');
+        console.log('DB connection established.');
 
         let countBuffer: any = await todoCounter.find().next();
 
@@ -48,7 +49,7 @@ async function run() {
         });
 
     } catch (err) {
-        console.log("Возникла ошибка");
+        console.log("An error occurred!");
         console.log(err);
     }
 }
@@ -58,7 +59,9 @@ run();
 app.get('/api/v1/items', async (req: Request, res: Response) => {
 
     try {
-        res.json({ items: await todoItems.find().toArray() })
+        let arrayOfItems:Object[] = await todoItems.find().toArray();
+        res.json({ items: arrayOfItems });
+
     } catch (err) {
         res.status(500).send({ "error": `${(err as Error).message}` })
     }
@@ -122,6 +125,8 @@ app.delete('/api/v1/items', async (req:Request, res:Response) => {
 
     }
 });
+
+// npm run dev
 
 
 

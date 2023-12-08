@@ -497,8 +497,8 @@ README:
                             .then(res => res.json())
                             .then(response => {
                                 if (response.ok) {
-                                    localStorage.setItem('name', this.login);
-                                    this.getTasks();
+                                    localStorage.setItem('name', this.login); //+
+                                    this.getTasks(); //+
                                     this.step = 'items';
                                 } else if (response.error === 'not found') {
                                     alert('Такая комбинация логина и пароля не найдена');
