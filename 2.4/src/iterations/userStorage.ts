@@ -7,8 +7,9 @@ import session, { Store } from 'express-session';
 import fileStore, { FileStore } from 'session-file-store';
 
 
-// Extends module: adds a second field "userLogin" in the main user session object
-// that already contains a field "cookies".
+// Extends module 'express-session': adds a field "userLogin" in the user session JSON object
+// that already contains a field "cookies" and others fields. You can see them in the directory
+// "session" in your project.
 declare module 'express-session' {
     interface SessionData {
         userLogin: string
@@ -21,25 +22,23 @@ const urlMongo: string = "mongodb://127.0.0.1:27017/";
 const client: MongoClient = new MongoClient(urlMongo);
 const todoItems: Collection = client.db("todo").collection("items");
 const todoCounter: Collection = client.db("todo").collection("counter");
-let todoCount: number;
 const FileStore: FileStore = fileStore(session);
+let todoCount: number;
 
+// Insert new types for facilitation of the work.
+// Item is an element of todos array.
 type Item = {
     id: number,
     text: string,
     checked: boolean
 }
 
+// User is one element in database.
 type User = {
     name: string,
     pass: string,
     items: Item[]
 }
-
-type Counter = {
-    counter: number
-}
-
 
 app.use(express.json());
 app.use(bodyParser.json());
@@ -60,6 +59,9 @@ app.use(session({
     }
 }));
 
+/**
+ * The app code is a code for the server work. 
+ */ 
 async function run() {
     try {
         // Connecting to the Mongo server
@@ -67,12 +69,15 @@ async function run() {
 
         console.log('DB connection established!');
 
+        // If there is no value in the count database we insert zero.
         let countBuffer: any = await todoCounter.find().next();
 
         if (countBuffer === null) {
 
             todoCount = 0;
             todoCounter.insertOne({ counter: 0 });
+        
+        // The connection between variable and database value.
         } else {
 
             todoCount = countBuffer.counter;
@@ -87,8 +92,10 @@ async function run() {
         console.log(err);
     }
 }
-
+// Run the server.
 run();
+
+/*      Routes for different users.    */
 
 app.get('/api/v1/items', async (req: Request, res: Response) => { //+
 
@@ -119,15 +126,17 @@ app.post('/api/v1/items', async (req: Request, res: Response) => {
             // Pop an object from MongoDB in the buffer variable. (Object is a mongo document). 
             let collectionCounter: any = await todoCounter.findOne();
             todoCount = collectionCounter.counter;
+            
             // Raise up to one
             todoCount++;
 
             // Changes a value of id in mongodb "todo" collection "counter".
             await todoCounter.updateOne({ counter: todoCount - 1 }, { $set: { counter: todoCount } });
 
+            // Forms a new todo item based on request and updated count.
             let newTodo: Item = { id: todoCount, text: req.body.text, checked: false };
 
-
+            // Updates an information about this user in database.
             await todoItems.updateOne({ name: user }, { $push: { items: newTodo } });
 
             // Retrieves a response to frontend client.
@@ -149,17 +158,21 @@ app.post('/api/v1/register', async (req: Request, res: Response) => {
         let userLog: string = req.body.login;
         let password: string = req.body.pass;
 
+        // Check presence of registered user in the database.
         let userContain: any = await todoItems.findOne({ name: userLog });
 
         if (!userContain) {
+            
+            // Does a new user in database.
             let newUser: User = { name: userLog, pass: password, items: [] };
             await todoItems.insertOne(newUser);  //+
             req.session.userLogin = userLog;
             res.json({ ok: true });
+        
+        // If user is presence - no add to database.
         } else {
 
             res.status(500).send({ error: 'Failed to add user' });
-
         }
 
     } catch (err) {
@@ -169,10 +182,12 @@ app.post('/api/v1/register', async (req: Request, res: Response) => {
 })
 
 app.post('/api/v1/login', async (req: Request, res: Response) => {
+    
     try {
         let userLog: string = req.body.login;
         let password: string = req.body.pass;
 
+        // Check if this user exists in database.
         let userContain: any = await todoItems.findOne({ name: userLog, pass: password });
 
         if (userContain) {
@@ -181,49 +196,37 @@ app.post('/api/v1/login', async (req: Request, res: Response) => {
         } else {
 
             res.status(401).send('Not found');
-
         }
 
     } catch (err) {
         res.status(500).send({ "error: ": `${(err as Error).message}` });
     }
-
 })
 
 app.post('/api/v1/logout', async (req: Request, res: Response) => {
 
+    // We kills a session if user logout of the account.
     req.session.destroy((err) => {
         if (err) res.status(500).send({ "error": `${(err as Error).message}` });
         else res.json({ ok: true });
     });
-
 })
 
 app.put('/api/v1/items', async (req: Request, res: Response) => {
-    let newText: string = req.body.text;
-    let newCheck: boolean = req.body.checked;
-    let newItem: Item = req.body;
-    let username: string|undefined = req.session.userLogin
+
     let itemID: number = req.body.id
+
+    let newItem: Item = req.body;
+    let username: string | undefined = req.session.userLogin
+
     try {
 
-        // Buffered variables for recieving a new text and a new checked
-
-        /*   
-          let objectDB:any = await todoItems.findOne({name: req.session.userLogin});
-          let array:[] = objectDB.items;
-          let seekedIndex:number = array.findIndex(({id}) => id === req.body.id);
-          let seekedItem:Item = array[seekedIndex]; */
-
-        /* todoList.updateOne({ username }, { $set: { 'items.$[item]': item } },
-            { arrayFilters: [{ "item.id": itemID }] }) */
-
-        await todoItems.updateOne({ username },
-            { $set: { 'items.$[item].text': newText } },
-            { arrayFilters: [{ 'item.id': itemID }] }
+        // Changes info inside the array of todo items of this current user.
+        await todoItems.updateOne(
+            { name: username },
+            { $set: { "items.$[elem]": newItem } },
+            { arrayFilters: [{ "elem.id": itemID }] }
         );
-
-    ///    await todoItems.updateOne({name: req.session.userLogin}, {$set: {pass: '456'}}); ///+
 
         res.json({ ok: true });
     } catch (err) {
@@ -232,6 +235,28 @@ app.put('/api/v1/items', async (req: Request, res: Response) => {
     }
 
 })
+
+app.delete('/api/v1/items', async (req: Request, res: Response) => {
+
+    let itemID: number = req.body.id
+
+    let username: string | undefined = req.session.userLogin
+
+    try {
+
+        // Deletes one todo item in database if user has pressed to the cross) 
+        await todoItems.updateOne(
+            { name: username },
+            { $pull: { items: { id: itemID } } }
+        );
+
+        res.json({ ok: true });
+
+    } catch (err) {
+
+        res.status(500).send({ "error": `${(err as Error).message}` });
+    }
+});
 
 // npm run dev
 

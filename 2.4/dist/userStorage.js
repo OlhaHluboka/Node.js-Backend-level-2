@@ -142,25 +142,22 @@ app.post('/api/v1/logout', async (req, res) => {
     });
 });
 app.put('/api/v1/items', async (req, res) => {
-    let newText = req.body.text;
-    let newCheck = req.body.checked;
+    let itemID = req.body.id;
     let newItem = req.body;
     let username = req.session.userLogin;
-    let itemID = req.body.id;
     try {
-        // Buffered variables for recieving a new text and a new checked
-        /*
-          let objectDB:any = await todoItems.findOne({name: req.session.userLogin});
-          let array:[] = objectDB.items;
-          let seekedIndex:number = array.findIndex(({id}) => id === req.body.id);
-          let seekedItem:Item = array[seekedIndex]; */
-        /* todoList.updateOne({ username }, { $set: { 'items.$[item]': item } },
-            { arrayFilters: [{ "item.id": itemID }] }) */
-        /* await todoItems.updateOne({ username },
-            { $set: { 'items.$[item].text': newText } },
-            { arrayFilters: [{ 'item.id': itemID }] }
-        ); */
-        await todoItems.updateOne({ name: req.session.userLogin }, { $set: { pass: '456' } });
+        await todoItems.updateOne({ name: username }, { $set: { "items.$[elem]": newItem } }, { arrayFilters: [{ "elem.id": itemID }] });
+        res.json({ ok: true });
+    }
+    catch (err) {
+        res.status(500).send({ "error": `${err.message}` });
+    }
+});
+app.delete('/api/v1/items', async (req, res) => {
+    let itemID = req.body.id;
+    let username = req.session.userLogin;
+    try {
+        await todoItems.updateOne({ name: username }, { $pull: { items: { id: itemID } } });
         res.json({ ok: true });
     }
     catch (err) {
