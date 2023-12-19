@@ -2,12 +2,12 @@
   "name": "2.4",
   "version": "1.0.0",
   "description": "",
-  "main": "mongoDB.js",
+  "main": "routingV2.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf ./dist && tsc",
-    "start": "npm run build && node dist/mongoDB.js",
-    "dev": "npm run build && nodemon .\\dist\\mongoDB.js",
+    "start": "npm run build && node dist/routingV2.js",
+    "dev": "npm run build && nodemon .\\dist\\routingV2.js",
     "exec": "npx nodemon"
   },
   "keywords": [],

@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.todoCounter = exports.todoItems = exports.client = void 0;
-const app_1 = require("./app");
+exports.run = exports.todoCounter = exports.todoItems = exports.client = void 0;
 const mongodb_1 = require("mongodb");
 const urlMongo = "mongodb://127.0.0.1:27017/";
 exports.client = new mongodb_1.MongoClient(urlMongo);
@@ -23,13 +22,10 @@ async function run() {
         else {
             todoCount = countBuffer.counter;
         }
-        app_1.app.listen(app_1.port, () => {
-            console.log(`The server started and is listening the port ${app_1.port}`);
-        });
     }
     catch (err) {
         console.log("An error occurred!");
         console.log(err);
     }
 }
-run();
+exports.run = run;

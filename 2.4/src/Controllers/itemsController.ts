@@ -10,7 +10,7 @@ export async function getItems(req: Request, res: Response) {
         try {
 
             // Obtain of the user from DB.
-            let userInDB: any = getUser(user);
+            let userInDB: any = await getUser(user);
             
             res.json({ items: userInDB.items });
 

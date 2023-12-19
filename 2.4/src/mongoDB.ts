@@ -7,7 +7,7 @@ export const todoItems: Collection = client.db("todo").collection("items");
 export const todoCounter: Collection = client.db("todo").collection("counter");
 let todoCount: number;
 
-async function run() {
+export async function run() {
     try {
         // Connecting to the Mongo server
         await client.connect();
@@ -27,9 +27,7 @@ async function run() {
 
             todoCount = countBuffer.counter;
         }
-        app.listen(port, () => {
-            console.log(`The server started and is listening the port ${port}`);
-        });
+       
         
 
     } catch (err) {
@@ -37,7 +35,5 @@ async function run() {
         console.log(err);
     }
 }
-
-run();
 
 
