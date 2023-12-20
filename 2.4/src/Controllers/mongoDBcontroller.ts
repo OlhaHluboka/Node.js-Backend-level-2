@@ -1,4 +1,4 @@
-import { MongoClient, Collection, WithId } from "mongodb";
+import { MongoClient, Collection } from "mongodb";
 import { User, Item } from '../types';
 
 const urlMongo: string = "mongodb://127.0.0.1:27017/";
@@ -83,6 +83,7 @@ export async function addItemInDB(login: string, text: string) {
         await todoItems.updateOne({ "name": login }, { $push: { "items": item } });
 
         return todoCount;
+        
     } catch (err) {
 
         console.log(`Error -  ${err}`);

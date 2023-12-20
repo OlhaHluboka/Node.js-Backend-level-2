@@ -1,4 +1,3 @@
-import { app, port } from "./app";
 import { MongoClient, Collection } from "mongodb";
 
 const urlMongo: string = "mongodb://127.0.0.1:27017/";
@@ -27,9 +26,7 @@ export async function run() {
 
             todoCount = countBuffer.counter;
         }
-       
-        
-
+ 
     } catch (err) {
         console.log("An error occurred!");
         console.log(err);

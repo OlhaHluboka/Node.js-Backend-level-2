@@ -4,9 +4,6 @@ import {  run } from './mongoDB'
 import { login, logout, register } from './Controllers/userController'
 import { getItems, editItem, deleteItem, addItem } from './Controllers/itemsController'
 
-
-
-
 app.post('/api/v2/router', (req: Request, res: Response) => {
     let query: string = req.query.action as string
     switch (query) {
