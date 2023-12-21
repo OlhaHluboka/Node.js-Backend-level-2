@@ -39,4 +39,5 @@ app_1.app.post('/api/v2/router', (req, res) => {
     }
 });
 (0, mongoDB_1.run)();
-// npm run dev
+// npm run dev  - without nodemon
+// npm run go - with nodemon

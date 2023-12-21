@@ -2,6 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteItem = exports.editItem = exports.addItem = exports.getItems = void 0;
 const mongoDBcontroller_1 = require("./mongoDBcontroller");
+/**
+ * Gets items from mongoDB document (object) and returns a response with a list of items (todo actions).
+ * @param req
+ * @param res
+ */
 async function getItems(req, res) {
     let user = req.session.userLogin;
     if (user) {
@@ -19,6 +24,11 @@ async function getItems(req, res) {
     }
 }
 exports.getItems = getItems;
+/**
+ * Adds a new item in database and retrieves a response with its ID number.
+ * @param req
+ * @param res
+ */
 async function addItem(req, res) {
     try {
         let user = req.session.userLogin;
@@ -36,6 +46,11 @@ async function addItem(req, res) {
     }
 }
 exports.addItem = addItem;
+/**
+ * Edits selected item and returns "ok" from back to front.
+ * @param req
+ * @param res
+ */
 async function editItem(req, res) {
     let itemID = req.body.id;
     let newItem = req.body;
@@ -49,6 +64,11 @@ async function editItem(req, res) {
     }
 }
 exports.editItem = editItem;
+/**
+ * Deletes item from mongpDB and returns "ok" from back to front.
+ * @param req
+ * @param res
+ */
 async function deleteItem(req, res) {
     let itemID = req.body.id;
     let username = req.session.userLogin;
