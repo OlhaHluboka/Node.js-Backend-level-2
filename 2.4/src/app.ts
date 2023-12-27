@@ -22,10 +22,10 @@ export const FileStoreSession: FileStore = fileStore(session);
 
 app.use(express.json());
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, '../static')));
+//app.use(express.static(path.join(__dirname, '../static')));
 app.use(cors({
 
-    origin: 'http://localhost:3005',
+    origin: 'http://localhost:8080',
     credentials: true
 
 }));

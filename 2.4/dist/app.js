@@ -1,4 +1,5 @@
 "use strict";
+/** Finalized API according to recomendations by ChatGPT about working with module Routing in Express.  */
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -20,7 +21,7 @@ exports.app.use(express_1.default.json());
 exports.app.use(body_parser_1.default.json());
 exports.app.use(express_1.default.static(path_1.default.join(__dirname, '../static')));
 exports.app.use((0, cors_1.default)({
-    origin: 'http://localhost:3005',
+    origin: 'http://localhost:8080',
     credentials: true
 }));
 exports.app.use((0, express_session_1.default)({
@@ -38,3 +39,4 @@ exports.app.listen(exports.port, () => {
     console.log(`The server started and is listening the port ${exports.port}`);
 });
 (0, mongoDB_1.run)();
+// npm start
